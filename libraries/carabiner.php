@@ -282,6 +282,8 @@ class Carabiner {
 			// for testing to work
 			$fcpath = str_replace('application/third_party/CIUnit/', '', FCPATH);
 			$apppath = str_replace($fcpath, '', APPPATH);
+			
+			// If you change your third_party directory, be sure to change it here.
 			require_once($fcpath . $apppath . 'third_party/carabiner/libraries/less_php/lessc.inc.php');
 		}
 	}
@@ -969,17 +971,12 @@ class Carabiner {
 		// switch path and style_uri to cache if it exists there and not the main path
 		$style_uri = $this->style_uri;
 		
-		log_message('error', '------- MIKE -------> $this->cache_path . $file_ref: ' . $this->cache_path . $file_ref);
-		log_message('error', '------- MIKE -------> $path . $file_ref: ' . $path . $file_ref);
-		
 		// get base name for caching
 		$path_parts = pathinfo($file_ref);
 		$output_file = $path_parts['basename'];
 		
 		if (file_exists($this->cache_path . $output_file) && !file_exists($path . $output_file))
-		{
-			log_message('error', '------- MIKE -------> its in the cache');
-			
+		{	
 			$path = $this->cache_path;
 			$style_uri = $this->cache_uri;
 			$file_ref = $output_file;
@@ -1004,16 +1001,7 @@ class Carabiner {
 				$this->_load('cssmin');
 				
 				$rel = ( $this->isURL($file_ref) ) ? $file_ref : dirname($style_uri.$file_ref).'/';
-				
-				log_message('error', '------- MIKE -------> rel: ' . $rel);
-				log_message('error', '------- MIKE -------> style_uri: ' . $style_uri);
-				log_message('error', '------- MIKE -------> file_ref: ' . $file_ref);
-				
-				
 				$this->CI->cssmin->config(array('relativePath'=>$rel));
-
-				log_message('error', '------- MIKE -------> place 3: ' . $ref);
-				
 				$contents = $this->_get_contents( $ref );
 				return $this->CI->cssmin->minify($contents);
 			
