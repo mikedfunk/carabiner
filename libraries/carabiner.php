@@ -257,6 +257,9 @@ class Carabiner {
 	private $css = array('main'=>array());
 	private $loaded = array();
 	
+	private $fcpath;
+	private $apppath;
+	
     private $CI;
 	
 	
@@ -267,6 +270,10 @@ class Carabiner {
 	{
 		$this->CI =& get_instance();
 		log_message('debug', 'Carabiner: Library initialized.');
+		
+		// for testing to work
+		$this->fcpath = str_replace('application/third_party/CIUnit/', '', FCPATH);
+		$this->apppath = str_replace($this->fcpath, '', APPPATH);
 		
 		if( $this->CI->config->load('carabiner', TRUE, TRUE) ){
 		
@@ -279,15 +286,15 @@ class Carabiner {
 		// load less
 		if (!class_exists('lessc'))
 		{
-			// for testing to work
-			$fcpath = str_replace('application/third_party/CIUnit/', '', FCPATH);
-			$apppath = str_replace($fcpath, '', APPPATH);
-			
 			// this assumes the default parent structure but not the dirnames.
-			$p = dirname(__FILE__);
-			$gp = dirname($p);
-			$ggp = dirname($gp);
-			require_once($fcpath . $apppath . $ggp . '/' . $gp . '/' . $p . '/less_php/lessc.inc.php');
+			$path = dirname(__FILE__);
+			$parts = explode('/', $path);
+			
+			$p = $parts[(count($parts) - 1)];
+			$gp = $parts[(count($parts) - 2)];
+			$ggp = $parts[(count($parts) - 3)];
+			
+			require_once($this->fcpath . $this->apppath . $ggp . '/' . $gp . '/' . $p . '/less_php/lessc.inc.php');
 		}
 	}
 
@@ -323,13 +330,13 @@ class Carabiner {
 		if($this->base_uri == '') $this->base_uri = $this->CI->config->item('base_url');
 
 		// use the provided values to define the rest of them
-		$this->script_path = FCPATH.$this->script_dir;
+		$this->script_path = $this->fcpath.$this->script_dir;
 		$this->script_uri = $this->base_uri.$this->script_dir;
 		
-		$this->style_path = FCPATH.$this->style_dir;
+		$this->style_path = $this->fcpath.$this->style_dir;
 		$this->style_uri = $this->base_uri.$this->style_dir;
 
-		$this->cache_path = FCPATH.$this->cache_dir;
+		$this->cache_path = $this->fcpath.$this->cache_dir;
 		$this->cache_uri = $this->base_uri.$this->cache_dir;
 
 		log_message('debug', 'Carabiner: library configured.');
