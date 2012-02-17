@@ -276,6 +276,14 @@ class Carabiner {
 			$this->config($carabiner_config);
 		}
 		
+		// load less
+		if (!class_exists('lessc'))
+		{
+			// for testing to work
+			$fcpath = str_replace('application/third_party/CIUnit/', '', FCPATH);
+			$apppath = str_replace($fcpath, '', APPPATH);
+			require_once($fcpath . $apppath . 'third_party/carabiner/libraries/less_php/lessc.inc.php');
+		}
 	}
 
 
@@ -447,7 +455,47 @@ class Carabiner {
 
 	}
 	
+	// --------------------------------------------------------------------------
 	
+	/**
+	 * _less function.
+	 *
+	 * converts css file with less css
+	 * 
+	 * @access private
+	 * @param string $input_file
+	 * @param string $output_file (default: '') if left blank this will be the same 
+	 * as the input but with .css rather than .less
+	 * @return string the output file
+	 */
+	private function _less($input_file, $output_file = '')
+	{
+		// set output file name and compile
+		if ($output_file == '')
+		{
+			$output_file = str_replace('.less', '.css', $input_file);
+		}
+		
+		// get base name for caching
+		$path_parts = pathinfo($output_file);
+		$output_file = $path_parts['basename'];
+		$dir_name = $path_parts['dirname'];
+		
+		// error if file is not there
+		if (!file_exists($this->style_path . $input_file))
+		{
+			log_message('error', 'Carabiner: .less file does not exist at ' . $this->style_path . $input_file);
+		}
+		log_message('debug', 'Carabiner: less file saved to ' . $this->cache_path . $output_file);
+		if (lessc::ccompile($this->style_path . $input_file, $this->cache_path . $output_file))
+		{
+			log_message('debug', 'Carabiner: less file saved to ' . $this->cache_path . $output_file);
+		}
+		
+		return $dir_name . '/' . $output_file;
+	}
+	
+	// --------------------------------------------------------------------------
 	
 	/**
 	* Add an asset to queue
@@ -464,9 +512,21 @@ class Carabiner {
 	private function _asset($type, $dev_file, $prod_file = '', $combine, $minify, $media = 'screen', $group = 'main')
 	{
 		if ($type == 'css') : 
-		
+			
+			// convert dev file from .less to .css if it's a .less file
+			if (strpos($dev_file, '.less') !== FALSE)
+			{	
+				$dev_file = $this->_less($dev_file);
+			}
+			
 			$this->css[$group][$media][] = array( 'dev'=>$dev_file );
 			$index = count($this->css[$group][$media]) - 1;
+
+			// convert production file from .less to .css if it's a .less file
+			if (strpos($prod_file, '.less') !== FALSE)
+			{
+				$prod_file = $this->_less($prod_file);
+			}
 
 			if($prod_file != '') $this->css[$group][$media][$index]['prod'] = $prod_file;
 			$this->css[$group][$media][$index]['combine'] = $combine;
@@ -865,6 +925,16 @@ class Carabiner {
 			
 			$v = (isset($file['prod']) ) ? 'prod' : 'dev';
 			
+			// get base name for caching
+			$path_parts = pathinfo($file[$v]);
+			$output_file = $path_parts['basename'];
+			
+			// switch path to cache if it exists there and not the main path
+			if (file_exists($this->cache_path . $output_file) && !file_exists($path . $output_file))
+			{
+				$path = $this->cache_path;
+			}
+			
 			if( (isset($file['minify']) && $file['minify'] == true) || (!isset($file['minify']) && $minify) ):
 				
 				$file_data .=  $this->_minify( $flag, $file['dev'] ) . "\n";
@@ -872,6 +942,7 @@ class Carabiner {
 			else:
 			
 				$r = ( $this->isURL($file[$v]) ) ? $file[$v] : realpath($path.$file[$v]);
+				
 				$file_data .=  $this->_get_contents( $r ) ."\n";
 				
 			endif;
@@ -894,6 +965,26 @@ class Carabiner {
 	{
 		
 		$path = ($flag == 'css') ? $this->style_path : $this->script_path;
+		
+		// switch path and style_uri to cache if it exists there and not the main path
+		$style_uri = $this->style_uri;
+		
+		log_message('error', '------- MIKE -------> $this->cache_path . $file_ref: ' . $this->cache_path . $file_ref);
+		log_message('error', '------- MIKE -------> $path . $file_ref: ' . $path . $file_ref);
+		
+		// get base name for caching
+		$path_parts = pathinfo($file_ref);
+		$output_file = $path_parts['basename'];
+		
+		if (file_exists($this->cache_path . $output_file) && !file_exists($path . $output_file))
+		{
+			log_message('error', '------- MIKE -------> its in the cache');
+			
+			$path = $this->cache_path;
+			$style_uri = $this->cache_uri;
+			$file_ref = $output_file;
+		}
+		
 		$ref  = ( $this->isURL($file_ref) ) ? $file_ref : realpath($path.$file_ref);
 
 		switch($flag){
@@ -912,9 +1003,17 @@ class Carabiner {
 			
 				$this->_load('cssmin');
 				
-				$rel = ( $this->isURL($file_ref) ) ? $file_ref : dirname($this->style_uri.$file_ref).'/';
+				$rel = ( $this->isURL($file_ref) ) ? $file_ref : dirname($style_uri.$file_ref).'/';
+				
+				log_message('error', '------- MIKE -------> rel: ' . $rel);
+				log_message('error', '------- MIKE -------> style_uri: ' . $style_uri);
+				log_message('error', '------- MIKE -------> file_ref: ' . $file_ref);
+				
+				
 				$this->CI->cssmin->config(array('relativePath'=>$rel));
 
+				log_message('error', '------- MIKE -------> place 3: ' . $ref);
+				
 				$contents = $this->_get_contents( $ref );
 				return $this->CI->cssmin->minify($contents);
 			
