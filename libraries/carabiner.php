@@ -283,8 +283,11 @@ class Carabiner {
 			$fcpath = str_replace('application/third_party/CIUnit/', '', FCPATH);
 			$apppath = str_replace($fcpath, '', APPPATH);
 			
-			// If you change your third_party directory, be sure to change it here.
-			require_once($fcpath . $apppath . 'third_party/carabiner/libraries/less_php/lessc.inc.php');
+			// this assumes the default parent structure but not the dirnames.
+			$p = dirname(__FILE__);
+			$gp = dirname($p);
+			$ggp = dirname($gp);
+			require_once($fcpath . $apppath . $ggp . '/' . $gp . '/' . $p . '/less_php/lessc.inc.php');
 		}
 	}
 
