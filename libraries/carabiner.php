@@ -288,7 +288,11 @@ class Carabiner {
 		{
 			// this assumes the default parent structure but not the dirnames.
 			$path = dirname(__FILE__);
-			$parts = explode('/', $path);
+			
+			// set delimiter and split to array
+			if (strpos($path, '\\') !== FALSE && strpos($path, '/') === FALSE) { $delimiter = '\\'; }
+			else { $delimiter = '/'; }
+			$parts = explode($delimiter, $path);
 			
 			$p = $parts[(count($parts) - 1)];
 			$gp = $parts[(count($parts) - 2)];
