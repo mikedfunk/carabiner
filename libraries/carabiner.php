@@ -288,11 +288,7 @@ class Carabiner {
 		{
 			// this assumes the default parent structure but not the dirnames.
 			$path = dirname(__FILE__);
-			
-			// set delimiter and split to array
-			if (strpos($path, '\\') !== FALSE && strpos($path, '/') === FALSE) { $delimiter = '\\'; }
-			else { $delimiter = '/'; }
-			$parts = explode($delimiter, $path);
+			$parts = explode('/', $path);
 			
 			$p = $parts[(count($parts) - 1)];
 			$gp = $parts[(count($parts) - 2)];
@@ -508,7 +504,7 @@ class Carabiner {
 			log_message('debug', 'Carabiner: less file saved to ' . $this->cache_path . $output_file);
 		}
 		
-		return $dir_name . '/' . $output_file;
+		return $output_file;
 	}
 	
 	// --------------------------------------------------------------------------
@@ -808,7 +804,14 @@ class Carabiner {
 				$filenames = '';
 		
 				foreach ($refs as $ref):
-		
+					
+					// set ref path to cache if the file is there
+					if (!file_exists($this->style_path . $ref['dev']) && file_exists($this->cache_path . $ref['dev']))
+					{	
+						$style_path = $this->style_path;
+						$this->style_path = $this->cache_path;
+					}
+					
 					$lastmodified = max($lastmodified, filemtime( realpath( $this->style_path . $ref['dev'] ) ) );
 					$filenames .= $ref['dev'];
 			
@@ -819,6 +822,12 @@ class Carabiner {
 					else:
 						$files[] = (isset($ref['prod'])) ? array('prod'=>$ref['prod'], 'dev'=>$ref['dev'] ) : array('dev'=>$ref['dev']);
 					endif;	
+					
+					// set style path back
+					if (isset($style_path))
+					{
+						$this->style_path = $style_path;
+					}
 									
 				endforeach;
 				
