@@ -73,6 +73,7 @@ $config['cache_dir'] = 'assets/cache/';
 */
 
 $config['dev'] = FALSE;
+if (ENVIRONMENT == 'testing') {$config['dev'] = TRUE;}
 
 
 /*
