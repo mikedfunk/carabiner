@@ -290,7 +290,7 @@ class Carabiner {
 			$path = dirname(__FILE__);
 			$sp = '/';
 			if (strpos(FCPATH_U, '/') === FALSE) { $sp = '\\'; }
-			require_once($path . $sp . 'libraries' . $sp . 'less_php' . $sp . 'less.inc.php');
+			require_once($path . $sp . 'less_php' . $sp . 'lessc.inc.php');
 			// $parts = explode('/', $path);
 			
 			// $p = $parts[(count($parts) - 1)];
