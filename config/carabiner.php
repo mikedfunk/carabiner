@@ -74,7 +74,7 @@ $config['cache_dir'] = 'assets/cache/';
 
 // defaulting to true until I can figure out what to do about image urls.
 // they are different depending on whether an item is cached or not.
-$config['dev'] = TRUE;
+$config['dev'] = FALSE;
 if (ENVIRONMENT == 'testing') {$config['dev'] = TRUE;}
 
 
