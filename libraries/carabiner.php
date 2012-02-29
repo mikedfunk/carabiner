@@ -288,13 +288,14 @@ class Carabiner {
 		{
 			// this assumes the default parent structure but not the dirnames.
 			$path = dirname(__FILE__);
-			$parts = explode('/', $path);
+			require_once($path . '/less_php/less.inc.php');
+			// $parts = explode('/', $path);
 			
-			$p = $parts[(count($parts) - 1)];
-			$gp = $parts[(count($parts) - 2)];
-			$ggp = $parts[(count($parts) - 3)];
+			// $p = $parts[(count($parts) - 1)];
+			// $gp = $parts[(count($parts) - 2)];
+			// $ggp = $parts[(count($parts) - 3)];
 			
-			require_once($this->fcpath . $this->apppath . $ggp . '/' . $gp . '/' . $p . '/less_php/lessc.inc.php');
+			// require_once($this->fcpath . $this->apppath . $ggp . '/' . $gp . '/' . $p . '/less_php/lessc.inc.php');
 		}
 	}
 
