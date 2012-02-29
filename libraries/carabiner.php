@@ -288,15 +288,19 @@ class Carabiner {
 		{
 			$path = dirname(__FILE__);
 			require_once($path . '/less_php/lessc.inc.php');
+			log_message('debug', 'Carabiner: less_css loaded.');
 		}
 		
-		// fix config vars
-		$this->script_dir = $this->script_dir;
-		$this->script_path = $this->script_path;
-		$this->style_dir = $this->style_dir;
-		$this->style_path = $this->style_path;
-		$this->cache_dir = $this->cache_dir;
-		$this->cache_path = $this->cache_path;
+		// check cache for problems
+		if (!file_exists($this->cache_path))
+		{
+			die('Carabiner: cache path does not exist. Please set the cache path in config/carabiner.php.');
+		}
+		if (!is_really_writable($this->cache_path))
+		{
+			die('Carabiner: cache path is not writable. Please update the permissions of ' . $this->cache_dir .'.');
+		}
+		
 	}
 	
 	// --------------------------------------------------------------------------
