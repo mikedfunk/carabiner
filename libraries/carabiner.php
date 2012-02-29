@@ -288,7 +288,9 @@ class Carabiner {
 		{
 			// this assumes the default parent structure but not the dirnames.
 			$path = dirname(__FILE__);
-			require_once($path . '/less_php/less.inc.php');
+			$sp = '/';
+			if (strpos(FCPATH_U, '/') === FALSE) { $sp = '\'; }
+			require_once($path . $sp . 'less_php' . $sp . 'less.inc.php');
 			// $parts = explode('/', $path);
 			
 			// $p = $parts[(count($parts) - 1)];
