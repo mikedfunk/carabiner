@@ -287,34 +287,16 @@ class Carabiner {
 		if (!class_exists('lessc'))
 		{
 			$path = dirname(__FILE__);
-			require_once($this->_slash($path . '/less_php/lessc.inc.php'));
+			require_once($path . '/less_php/lessc.inc.php');
 		}
 		
 		// fix config vars
-		$this->script_dir = $this->_slash($this->script_dir);
-		$this->script_path = $this->_slash($this->script_path);
-		$this->style_dir = $this->_slash($this->style_dir);
-		$this->style_path = $this->_slash($this->style_path);
-		$this->cache_dir = $this->_slash($this->cache_dir);
-		$this->cache_path = $this->_slash($this->cache_path);
-	}
-	
-	// --------------------------------------------------------------------------
-	
-	/**
-	 * fixes paths for windows
-	 * 
-	 * @access private
-	 * @param mixed $string
-	 * @return void
-	 */
-	private function _slash($string)
-	{
-		if (strpos(FCPATH, '/') === FALSE)
-		{
-			$string = str_replace('/', '\\', $string);
-		}
-		return $string;
+		$this->script_dir = $this->script_dir;
+		$this->script_path = $this->script_path;
+		$this->style_dir = $this->style_dir;
+		$this->style_path = $this->style_path;
+		$this->cache_dir = $this->cache_dir;
+		$this->cache_path = $this->cache_path;
 	}
 	
 	// --------------------------------------------------------------------------
@@ -1045,7 +1027,7 @@ class Carabiner {
 				$this->_load('cssmin');
 				
 				$rel = ( $this->isURL($file_ref) ) ? $file_ref : dirname($style_uri.$file_ref). '/';
-				$rel = $this->_slash($rel);
+				$rel = $rel;
 				$this->CI->cssmin->config(array('relativePath'=>$rel));
 				$contents = $this->_get_contents( $ref );
 				return $this->CI->cssmin->minify($contents);
