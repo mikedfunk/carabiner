@@ -259,6 +259,7 @@ class Carabiner {
 	
 	private $fcpath;
 	private $apppath;
+	private $placeholder;
 	
     private $CI;
 	
@@ -825,11 +826,7 @@ class Carabiner {
 						$files[] = (isset($ref['prod'])) ? array('prod'=>$ref['prod'], 'dev'=>$ref['dev'] ) : array('dev'=>$ref['dev']);
 					endif;	
 					
-					// set style path back
-					if (isset($style_path))
-					{
-						$this->style_path = $style_path;
-					}
+					$this->_original_style_paths();
 									
 				endforeach;
 				
@@ -1108,6 +1105,8 @@ class Carabiner {
 				
 				$dir = ( $this->isURL($ref) ) ? '' : ( ($cache) ? $this->cache_uri : $this->style_uri );
 				
+				$this->_original_style_paths();
+				
 				return '<link type="text/css" rel="stylesheet" href="'.$dir.$ref.'" media="'.$media.'" />'."\r\n";
 			
 			break;
@@ -1137,11 +1136,33 @@ class Carabiner {
 	{
 		// set ref path to cache if the file is there
 		if (!file_exists($this->style_path . $file) && file_exists($this->cache_path . $file))
-		{	
+		{
+			// set placeholder so we can return it later
+			$this->placeholder['style_path'] = $this->style_path;
+			$this->placeholder['style_dir'] = $this->style_dir;
+			$this->placeholder['style_uri'] = $this->style_uri;
+			
+			// set paths to cache
 			$this->style_path = $this->cache_path;
 			$this->style_dir = $this->cache_dir;
 			$this->style_uri = $this->cache_uri;
 		}
+	}
+	
+	// --------------------------------------------------------------------------
+	
+	/**
+	 * _original_style_paths function.
+	 * 
+	 * @access private
+	 * @return void
+	 */
+	private function _original_style_paths()
+	{
+		// return to original style paths
+		$this->style_path = $this->placeholder['style_path'];
+		$this->style_dir = $this->placeholder['style_dir'];
+		$this->style_uri = $this->placeholder['style_uri'];
 	}
 	
 	// --------------------------------------------------------------------------
