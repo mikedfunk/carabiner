@@ -812,12 +812,7 @@ class Carabiner {
 		
 				foreach ($refs as $ref):
 					
-					// set ref path to cache if the file is there
-					if (!file_exists($this->style_path . $ref['dev']) && file_exists($this->cache_path . $ref['dev']))
-					{	
-						$style_path = $this->style_path;
-						$this->style_path = $this->cache_path;
-					}
+					$this->_cache_or_style($ref['dev']);
 					
 					$lastmodified = max($lastmodified, filemtime( realpath( $this->style_path . $ref['dev'] ) ) );
 					$filenames .= $ref['dev'];
@@ -1109,6 +1104,8 @@ class Carabiner {
 		
 			case 'css':
 				
+				$this->_cache_or_style($ref);
+				
 				$dir = ( $this->isURL($ref) ) ? '' : ( ($cache) ? $this->cache_uri : $this->style_uri );
 				
 				return '<link type="text/css" rel="stylesheet" href="'.$dir.$ref.'" media="'.$media.'" />'."\r\n";
@@ -1127,6 +1124,27 @@ class Carabiner {
 	
 	}	
 	
+	// --------------------------------------------------------------------------
+		
+	/**
+	 * _cache_or_style function.
+	 * 
+	 * @access private
+	 * @param string $file
+	 * @return void
+	 */
+	private function _cache_or_style($file)
+	{
+		// set ref path to cache if the file is there
+		if (!file_exists($this->style_path . $file) && file_exists($this->cache_path . $file))
+		{	
+			$this->style_path = $this->cache_path;
+			$this->style_dir = $this->cache_dir;
+			$this->style_uri = $this->cache_uri;
+		}
+	}
+	
+	// --------------------------------------------------------------------------
 	
 	/** 
 	* Function used to clear the asset cache. If no flag is set, both CSS and JS will be emptied.
