@@ -261,7 +261,6 @@ class Carabiner {
 	private $apppath;
 	
     private $CI;
-    private $sp;
 	
 	
 	/** 
@@ -275,10 +274,6 @@ class Carabiner {
 		// for testing to work
 		$this->fcpath = str_replace('application/third_party/CIUnit/', '', FCPATH);
 		$this->apppath = str_replace($this->fcpath, '', APPPATH);
-
-		// path separator
-		$this->sp = '/';
-		if (strpos(FCPATH_U, '/') === FALSE) { $this->sp = '\\'; }
 		
 		if( $this->CI->config->load('carabiner', TRUE, TRUE) ){
 		
@@ -291,18 +286,38 @@ class Carabiner {
 		// load less
 		if (!class_exists('lessc'))
 		{
-			// this assumes the default parent structure but not the dirnames.
 			$path = dirname(__FILE__);
-			require_once($path . $this->sp . 'less_php' . $this->sp . 'lessc.inc.php');
-			// $parts = explode('/', $path);
-			
-			// $p = $parts[(count($parts) - 1)];
-			// $gp = $parts[(count($parts) - 2)];
-			// $ggp = $parts[(count($parts) - 3)];
-			
-			// require_once($this->fcpath . $this->apppath . $ggp . '/' . $gp . '/' . $p . '/less_php/lessc.inc.php');
+			require_once($this->_slash($path . '/less_php/lessc.inc.php'));
 		}
+		
+		// fix config vars
+		$this->script_dir = $this->_slash($this->script_dir);
+		$this->script_path = $this->_slash($this->script_path);
+		$this->style_dir = $this->_slash($this->style_dir);
+		$this->style_path = $this->_slash($this->style_path);
+		$this->cache_dir = $this->_slash($this->cache_dir);
+		$this->cache_path = $this->_slash($this->cache_path);
 	}
+	
+	// --------------------------------------------------------------------------
+	
+	/**
+	 * fixes paths for windows
+	 * 
+	 * @access private
+	 * @param mixed $string
+	 * @return void
+	 */
+	private function _slash($string)
+	{
+		if (strpos(FCPATH, '/') === FALSE)
+		{
+			$string = str_replace('/', '\\', $string);
+		}
+		return $string;
+	}
+	
+	// --------------------------------------------------------------------------
 
 
 	/** 
@@ -1029,7 +1044,8 @@ class Carabiner {
 			
 				$this->_load('cssmin');
 				
-				$rel = ( $this->isURL($file_ref) ) ? $file_ref : dirname($style_uri.$file_ref).$this->sp;
+				$rel = ( $this->isURL($file_ref) ) ? $file_ref : dirname($style_uri.$file_ref). '/';
+				$rel = $this->_slash($rel);
 				$this->CI->cssmin->config(array('relativePath'=>$rel));
 				$contents = $this->_get_contents( $ref );
 				return $this->CI->cssmin->minify($contents);
