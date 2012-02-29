@@ -278,7 +278,7 @@ class Carabiner {
 
 		// path separator
 		$this->sp = '/';
-		if (strpos(FCPATH_U, '/') === FALSE) { $sp = '\\'; }
+		if (strpos(FCPATH_U, '/') === FALSE) { $this->sp = '\\'; }
 		
 		if( $this->CI->config->load('carabiner', TRUE, TRUE) ){
 		
@@ -293,7 +293,7 @@ class Carabiner {
 		{
 			// this assumes the default parent structure but not the dirnames.
 			$path = dirname(__FILE__);
-			require_once($path . $sp . 'less_php' . $sp . 'lessc.inc.php');
+			require_once($path . $this->sp . 'less_php' . $this->sp . 'lessc.inc.php');
 			// $parts = explode('/', $path);
 			
 			// $p = $parts[(count($parts) - 1)];
