@@ -1160,9 +1160,9 @@ class Carabiner {
 	private function _original_style_paths()
 	{
 		// return to original style paths
-		$this->style_path = $this->placeholder['style_path'];
-		$this->style_dir = $this->placeholder['style_dir'];
-		$this->style_uri = $this->placeholder['style_uri'];
+		if (isset($this->placeholder['style_path'])) { $this->style_path = $this->placeholder['style_path']; }
+		if (isset($this->placeholder['style_dir'])) { $this->style_dir = $this->placeholder['style_dir']; }
+		if (isset($this->placeholder['style_uri'])) { $this->style_uri = $this->placeholder['style_uri']; }
 	}
 	
 	// --------------------------------------------------------------------------
