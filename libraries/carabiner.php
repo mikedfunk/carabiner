@@ -261,6 +261,7 @@ class Carabiner {
 	private $apppath;
 	
     private $CI;
+    private $sp;
 	
 	
 	/** 
@@ -274,6 +275,10 @@ class Carabiner {
 		// for testing to work
 		$this->fcpath = str_replace('application/third_party/CIUnit/', '', FCPATH);
 		$this->apppath = str_replace($this->fcpath, '', APPPATH);
+
+		// path separator
+		$this->sp = '/';
+		if (strpos(FCPATH_U, '/') === FALSE) { $sp = '\\'; }
 		
 		if( $this->CI->config->load('carabiner', TRUE, TRUE) ){
 		
@@ -288,8 +293,6 @@ class Carabiner {
 		{
 			// this assumes the default parent structure but not the dirnames.
 			$path = dirname(__FILE__);
-			$sp = '/';
-			if (strpos(FCPATH_U, '/') === FALSE) { $sp = '\\'; }
 			require_once($path . $sp . 'less_php' . $sp . 'lessc.inc.php');
 			// $parts = explode('/', $path);
 			
@@ -1026,7 +1029,7 @@ class Carabiner {
 			
 				$this->_load('cssmin');
 				
-				$rel = ( $this->isURL($file_ref) ) ? $file_ref : dirname($style_uri.$file_ref).'/';
+				$rel = ( $this->isURL($file_ref) ) ? $file_ref : dirname($style_uri.$file_ref).$this->sp;
 				$this->CI->cssmin->config(array('relativePath'=>$rel));
 				$contents = $this->_get_contents( $ref );
 				return $this->CI->cssmin->minify($contents);
