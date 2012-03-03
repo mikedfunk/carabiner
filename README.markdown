@@ -3,7 +3,7 @@ Carabiner
 
 **All credit to [Tony Dewan](http://codeigniter.com/forums/member/83507/) for original library.**
 
-This is Carabiner implemented as a spark on (getsparks.org)[http://getsparks.org]. Once sparks is installed, load the spark with ```$this->load->spark('carabiner/1.6.0');```.
+This is Carabiner implemented as a spark on (getsparks.org)[http://getsparks.org]. Once sparks is installed, load the spark with ```$this->load->spark('carabiner/1.5.1');```.
 
 [Usage Documentation](http://codeigniter.com/wiki/Carabiner/)
 
