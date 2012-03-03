@@ -10,7 +10,7 @@
  * @email		mike@mikefunk.com
  * 
  * @file		carabiner.php
- * @version		1.5.1
+ * @version		1.5.2
  * @date		03/03/2012
  * 
  * Copyright (c) 2012
