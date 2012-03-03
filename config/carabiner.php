@@ -1,9 +1,20 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-
 /**
-* Carabiner 1.45 configuration file.
-* CodeIgniter-library for Asset Management
-*/
+ * carabiner config
+ * 
+ * The config file for carabiner
+ * 
+ * @license		http://www.opensource.org/licenses/bsd-license.php BSD licensed.
+ * @author		Mike Funk, Tony Dewan
+ * @link		http://mikefunk.com
+ * @email		mike@mikefunk.com
+ * 
+ * @file		carabiner.php
+ * @version		1.6.0
+ * @date		03/03/2012
+ * 
+ * Copyright (c) 2012
+ */
 
 /*
 |--------------------------------------------------------------------------
@@ -326,3 +337,7 @@ $config['groups']['yui'] = array(
 
 );
 
+// --------------------------------------------------------------------------
+
+/* End of file carabiner.php */
+/* Location: ./carabiner/config/carabiner.php */
