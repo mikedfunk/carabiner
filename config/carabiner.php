@@ -10,7 +10,7 @@
  * @email		mike@mikefunk.com
  * 
  * @file		carabiner.php
- * @version		1.5.3
+ * @version		1.5.4
  * @date		03/05/2012
  */
 
