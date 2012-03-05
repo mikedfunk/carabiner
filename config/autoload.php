@@ -10,16 +10,14 @@
  * @email		mike@mikefunk.com
  * 
  * @file		autoload.php
- * @version		1.0
- * @date		03/04/2012
- * 
- * Copyright (c) 2012
+ * @version		1.5.3
+ * @date		03/05/2012
  */
 
 // --------------------------------------------------------------------------
 
-// $autoload['library'] = array('carabiner');
-// $autoload['config'] = array('carabiner');
+$autoload['library'] = array('carabiner');
+$autoload['config'] = array('carabiner');
 
 // --------------------------------------------------------------------------
 
