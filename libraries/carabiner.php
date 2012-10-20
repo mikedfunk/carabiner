@@ -1023,7 +1023,6 @@ class Carabiner {
 				$this->_load('cssmin');
 				
 				$rel = ( $this->isURL($file_ref) ) ? $file_ref : dirname($style_uri.$file_ref). '/';
-				$rel = $rel;
 				$this->CI->cssmin->config(array('relativePath'=>$rel));
 				$contents = $this->_get_contents( $ref );
 				return $this->CI->cssmin->minify($contents);
